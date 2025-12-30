@@ -181,6 +181,17 @@
                 </div>
             </div> <!-- Fin game-main -->
 
+        <!-- Modal d'invitation (rejoindre via lien) -->
+        <div id="invite-modal" class="modal hidden">
+            <div class="modal-content invite-modal">
+                <h2>🐿️ Écureuil</h2>
+                <p class="invite-text">Vous avez été invité à rejoindre une partie !</p>
+                <input type="text" id="invite-name" class="player-name-input" placeholder="Entrez votre pseudo">
+                <button id="join-via-invite" class="btn-primary">Rejoindre la partie</button>
+                <button id="cancel-invite" class="btn-secondary btn-small">Annuler</button>
+            </div>
+        </div>
+
         <!-- Modal de notification (erreur/succès) -->
         <div id="notification-modal" class="modal hidden">
             <div class="modal-content notification-modal">

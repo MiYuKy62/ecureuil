@@ -914,6 +914,48 @@ body {
     color: var(--warning);
 }
 
+/* Modal d'invitation */
+.modal-content.invite-modal {
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    padding: 2.5rem 2rem;
+}
+
+.invite-modal h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.invite-text {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.invite-modal .player-name-input {
+    width: 100%;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.invite-modal .btn-primary {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+}
+
+.invite-modal .btn-secondary {
+    width: 100%;
+}
+
 /* Modal des règles */
 .modal-content.rules-modal {
     max-width: 700px;

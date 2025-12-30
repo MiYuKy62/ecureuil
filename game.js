@@ -92,8 +92,16 @@ const elements = {
     notificationIcon: document.getElementById('notification-icon'),
     notificationTitle: document.getElementById('notification-title'),
     notificationMessage: document.getElementById('notification-message'),
-    closeNotification: document.getElementById('close-notification')
+    closeNotification: document.getElementById('close-notification'),
+    // Invite modal
+    inviteModal: document.getElementById('invite-modal'),
+    inviteName: document.getElementById('invite-name'),
+    joinViaInvite: document.getElementById('join-via-invite'),
+    cancelInvite: document.getElementById('cancel-invite')
 };
+
+// Code d'invitation depuis l'URL
+let pendingInviteCode = null;
 
 // Nombre de joueurs sélectionné
 let selectedPlayerCount = 4;
@@ -226,6 +234,13 @@ function setupEventListeners() {
             closeNotificationModal();
         }
     });
+    
+    // Invite modal (lien d'invitation)
+    elements.joinViaInvite.addEventListener('click', joinViaInvite);
+    elements.cancelInvite.addEventListener('click', cancelInvite);
+    elements.inviteName.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') joinViaInvite();
+    });
 }
 
 // Sélectionner le mode de jeu
@@ -329,13 +344,53 @@ function checkUrlForGameCode() {
     const code = urlParams.get('code');
     
     if (code) {
-        // Passer en mode en ligne
-        selectMode('online');
-        // Remplir le code
-        elements.gameCodeInput.value = code;
+        // Stocker le code
+        pendingInviteCode = code;
+        // Afficher la popup d'invitation
+        elements.inviteModal.classList.remove('hidden');
+        // Focus sur le champ pseudo
+        elements.inviteName.focus();
         // Nettoyer l'URL sans recharger la page
         window.history.replaceState({}, document.title, window.location.pathname);
     }
+}
+
+// Rejoindre via le lien d'invitation
+function joinViaInvite() {
+    const name = elements.inviteName.value.trim();
+    
+    if (!name) {
+        elements.inviteName.style.borderColor = '#e74c3c';
+        elements.inviteName.placeholder = 'Pseudo requis !';
+        return;
+    }
+    
+    if (!pendingInviteCode) {
+        elements.inviteModal.classList.add('hidden');
+        return;
+    }
+    
+    // Masquer la popup
+    elements.inviteModal.classList.add('hidden');
+    
+    // Rejoindre la partie
+    GameState.isOnline = true;
+    Network.joinGame(pendingInviteCode, name, (success, error) => {
+        if (success) {
+            elements.menuScreen.classList.remove('active');
+            elements.lobbyScreen.classList.add('active');
+            elements.hostControls.classList.add('hidden');
+            elements.waitingMessage.classList.remove('hidden');
+        } else {
+            showNotification('error', 'Erreur', error || 'Impossible de rejoindre la partie');
+        }
+    });
+}
+
+// Annuler l'invitation
+function cancelInvite() {
+    pendingInviteCode = null;
+    elements.inviteModal.classList.add('hidden');
 }
 
 // Mettre à jour l'affichage du lobby
