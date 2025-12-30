@@ -794,6 +794,17 @@ body {
     gap: 1rem;
     padding: 1rem;
     flex-wrap: wrap;
+    position: relative;
+}
+
+/* Bouton Je ferme - Style spécial */
+#close-round {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    padding: 1.2rem 2.5rem;
+    font-size: 1.4rem;
+    z-index: 100;
 }
 
 /* Modal */
