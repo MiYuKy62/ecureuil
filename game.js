@@ -356,7 +356,7 @@ function checkUrlForGameCode() {
 }
 
 // Rejoindre via le lien d'invitation
-function joinViaInvite() {
+async function joinViaInvite() {
     const name = elements.inviteName.value.trim();
     
     if (!name) {
@@ -375,16 +375,17 @@ function joinViaInvite() {
     
     // Rejoindre la partie
     GameState.isOnline = true;
-    Network.joinGame(pendingInviteCode, name, (success, error) => {
-        if (success) {
-            elements.menuScreen.classList.remove('active');
-            elements.lobbyScreen.classList.add('active');
-            elements.hostControls.classList.add('hidden');
-            elements.waitingMessage.classList.remove('hidden');
-        } else {
-            showNotification('error', 'Erreur', error || 'Impossible de rejoindre la partie');
-        }
-    });
+    
+    try {
+        await Network.joinGame(pendingInviteCode, name);
+        // Succès - aller au lobby
+        elements.menuScreen.classList.remove('active');
+        elements.lobbyScreen.classList.add('active');
+        elements.hostControls.classList.add('hidden');
+        elements.waitingMessage.classList.remove('hidden');
+    } catch (error) {
+        showNotification('error', 'Erreur', error.message || 'Impossible de rejoindre la partie');
+    }
 }
 
 // Annuler l'invitation
