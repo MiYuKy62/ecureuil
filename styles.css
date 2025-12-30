@@ -471,6 +471,9 @@ body {
     height: 100vh;
     max-height: 100vh;
     overflow: hidden;
+}
+
+#game-screen.active {
     display: flex;
     flex-direction: column;
 }
