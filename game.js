@@ -185,9 +185,15 @@ function setupEventListeners() {
 
     // Manche suivante
     elements.nextRound.addEventListener('click', () => {
-        if (GameState.isOnline && Network.isHost) {
-            startNewRoundOnline();
-        } else if (!GameState.isOnline) {
+        if (GameState.isOnline) {
+            if (Network.isHost) {
+                startNewRoundOnline();
+            } else {
+                // L'invité demande à l'hôte de lancer la nouvelle manche
+                Network.sendAction({ type: 'request_next_round' });
+                elements.roundEndModal.classList.add('hidden');
+            }
+        } else {
             startNewRound();
         }
     });
@@ -499,6 +505,12 @@ function handleRemoteAction(action, playerId) {
     const playerIndex = GameState.players.findIndex(p => p.peerId === playerId);
     if (playerIndex === -1) {
         console.log('Joueur non trouvé:', playerId);
+        return;
+    }
+    
+    // Pour l'action "request_next_round", on lance la nouvelle manche
+    if (action.type === 'request_next_round') {
+        startNewRoundOnline();
         return;
     }
     

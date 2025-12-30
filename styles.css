@@ -799,7 +799,7 @@ body {
 
 /* Bouton Je ferme - Style spécial */
 #close-round {
-    position: fixed;
+    position: absolute;
     right: 30px;
     top: 50%;
     transform: translateY(-50%);
@@ -1333,7 +1333,7 @@ body {
 }
 
 .scoreboard-panel {
-    position: fixed;
+    position: absolute;
     left: 20px;
     top: 50%;
     transform: translateY(-50%);
@@ -1470,7 +1470,7 @@ body {
     }
     
     .scoreboard-panel {
-        position: fixed;
+        position: absolute;
         left: 10px;
         right: 10px;
         top: auto;
