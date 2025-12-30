@@ -766,9 +766,9 @@ body {
 
 .player-cards {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, auto);
     gap: 0.4rem;
-    max-width: 160px;
+    justify-content: center;
     margin: 0 auto;
 }
 
@@ -777,15 +777,24 @@ body {
     height: 100px;
 }
 
-/* Adapter la taille des cartes si beaucoup de cartes */
+/* Adapter la taille des cartes si beaucoup de cartes (7-10) */
+.player-cards.many-cards {
+    grid-template-columns: repeat(2, auto);
+}
+
 .player-cards.many-cards .card {
-    width: 55px;
-    height: 80px;
+    width: 50px !important;
+    height: 72px !important;
+}
+
+/* Adapter la taille des cartes si énormément de cartes (11+) */
+.player-cards.lots-of-cards {
+    grid-template-columns: repeat(3, auto);
 }
 
 .player-cards.lots-of-cards .card {
-    width: 45px;
-    height: 65px;
+    width: 40px !important;
+    height: 57px !important;
 }
 
 .card.selectable {
