@@ -543,18 +543,16 @@ body {
 }
 
 .opponent-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.2rem;
-    max-width: 200px;
+    max-width: 90px;
 }
 
 .opponent-cards .card {
     width: 40px;
     height: 56px;
     font-size: 0.7rem;
-    flex-shrink: 0;
 }
 
 /* Adapter la taille des cartes adversaires si beaucoup */
@@ -767,18 +765,16 @@ body {
 }
 
 .player-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.4rem;
-    max-width: 400px;
+    max-width: 160px;
     margin: 0 auto;
 }
 
 .player-cards .card {
     width: 70px;
     height: 100px;
-    flex-shrink: 0;
 }
 
 /* Adapter la taille des cartes si beaucoup de cartes */
