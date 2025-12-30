@@ -1322,6 +1322,7 @@ body {
 
 #game-screen.active {
     flex-direction: row;
+    position: relative;
 }
 
 .game-main {
@@ -1332,20 +1333,27 @@ body {
 }
 
 .scoreboard-panel {
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
     width: 220px;
-    min-width: 220px;
     background: linear-gradient(180deg, rgba(45, 52, 54, 0.95) 0%, rgba(30, 35, 40, 0.98) 100%);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
     display: flex;
     flex-direction: column;
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    z-index: 50;
+    max-height: 80vh;
+    overflow: hidden;
 }
 
 .scoreboard-header {
-    padding: 1.5rem 1rem;
+    padding: 1rem;
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px 16px 0 0;
 }
 
 .scoreboard-header h3 {
@@ -1358,17 +1366,18 @@ body {
 
 .scoreboard-content {
     flex: 1;
-    padding: 1rem;
+    padding: 0.8rem;
     overflow-y: auto;
+    max-height: calc(80vh - 80px);
 }
 
 .score-row {
     display: flex;
     align-items: center;
-    padding: 0.8rem 1rem;
-    margin-bottom: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 0.4rem;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
+    border-radius: 10px;
     transition: all 0.3s ease;
     border: 1px solid transparent;
 }
@@ -1461,11 +1470,15 @@ body {
     }
     
     .scoreboard-panel {
-        width: 100%;
-        min-width: 100%;
-        max-height: 150px;
-        border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        position: fixed;
+        left: 10px;
+        right: 10px;
+        top: auto;
+        bottom: 10px;
+        transform: none;
+        width: auto;
+        max-height: 120px;
+        border-radius: 12px;
     }
     
     .scoreboard-content {
@@ -1473,6 +1486,7 @@ body {
         flex-wrap: wrap;
         gap: 0.5rem;
         padding: 0.5rem;
+        max-height: 70px;
     }
     
     .score-row {
@@ -1480,5 +1494,11 @@ body {
         min-width: 120px;
         margin-bottom: 0;
         padding: 0.5rem 0.8rem;
+    }
+    
+    #close-round {
+        right: 10px;
+        top: 80px;
+        transform: none;
     }
 }
