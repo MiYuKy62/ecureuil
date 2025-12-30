@@ -800,12 +800,13 @@ body {
 /* Bouton Je ferme - Style spécial */
 #close-round {
     position: absolute;
-    right: 25%;
+    right: 20%;
     top: 50%;
     transform: translateX(50%) translateY(-50%);
     padding: 1.2rem 2.5rem;
     font-size: 1.4rem;
     z-index: 100;
+    margin-top: 0;
 }
 
 /* Modal */
@@ -1334,7 +1335,7 @@ body {
 
 .scoreboard-panel {
     position: absolute;
-    left: 25%;
+    left: 20%;
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
     width: 220px;
