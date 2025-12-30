@@ -283,6 +283,13 @@ body {
 .code-hint {
     font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.6);
+    margin-top: 0.5rem;
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
 }
 
 .lobby-players {

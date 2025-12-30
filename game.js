@@ -42,6 +42,7 @@ const elements = {
     // Lobby
     displayGameCode: document.getElementById('display-game-code'),
     copyCode: document.getElementById('copy-code'),
+    copyLink: document.getElementById('copy-link'),
     playerCount: document.getElementById('player-count'),
     lobbyPlayerList: document.getElementById('lobby-player-list'),
     hostControls: document.getElementById('host-controls'),
@@ -102,6 +103,7 @@ function init() {
     setupEventListeners();
     updatePlayerNameInputs();
     setupNetworkCallbacks();
+    checkUrlForGameCode();
 }
 
 // Configuration des callbacks réseau
@@ -143,6 +145,7 @@ function setupEventListeners() {
     elements.createGame.addEventListener('click', createOnlineGame);
     elements.joinGame.addEventListener('click', joinOnlineGame);
     elements.copyCode.addEventListener('click', copyGameCode);
+    elements.copyLink.addEventListener('click', copyInviteLink);
     elements.startOnlineGame.addEventListener('click', startOnlineGame);
     elements.leaveLobby.addEventListener('click', leaveLobby);
 
@@ -304,6 +307,35 @@ function copyGameCode() {
             elements.copyCode.textContent = '📋';
         }, 2000);
     });
+}
+
+// Copier le lien d'invitation
+function copyInviteLink() {
+    const code = elements.displayGameCode.textContent;
+    const baseUrl = window.location.origin + window.location.pathname;
+    const inviteLink = `${baseUrl}?code=${code}`;
+    
+    navigator.clipboard.writeText(inviteLink).then(() => {
+        elements.copyLink.textContent = '✓ Lien copié !';
+        setTimeout(() => {
+            elements.copyLink.textContent = '🔗 Copier le lien d\'invitation';
+        }, 2000);
+    });
+}
+
+// Vérifier si un code est dans l'URL au chargement
+function checkUrlForGameCode() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    
+    if (code) {
+        // Passer en mode en ligne
+        selectMode('online');
+        // Remplir le code
+        elements.gameCodeInput.value = code;
+        // Nettoyer l'URL sans recharger la page
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
 }
 
 // Mettre à jour l'affichage du lobby
