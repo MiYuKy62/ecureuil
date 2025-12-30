@@ -543,15 +543,31 @@ body {
 }
 
 .opponent-cards {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.2rem;
+    max-width: 200px;
 }
 
 .opponent-cards .card {
     width: 40px;
     height: 56px;
     font-size: 0.7rem;
+    flex-shrink: 0;
+}
+
+/* Adapter la taille des cartes adversaires si beaucoup */
+.opponent-cards.many-cards .card {
+    width: 32px;
+    height: 45px;
+    font-size: 0.6rem;
+}
+
+.opponent-cards.lots-of-cards .card {
+    width: 26px;
+    height: 37px;
+    font-size: 0.5rem;
 }
 
 /* Zone centrale */
@@ -751,16 +767,29 @@ body {
 }
 
 .player-cards {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-    max-width: 180px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+    max-width: 400px;
     margin: 0 auto;
 }
 
 .player-cards .card {
     width: 70px;
     height: 100px;
+    flex-shrink: 0;
+}
+
+/* Adapter la taille des cartes si beaucoup de cartes */
+.player-cards.many-cards .card {
+    width: 55px;
+    height: 80px;
+}
+
+.player-cards.lots-of-cards .card {
+    width: 45px;
+    height: 65px;
 }
 
 .card.selectable {

@@ -1032,6 +1032,13 @@ function updateOpponentsDisplay() {
 
         const cardsEl = document.createElement('div');
         cardsEl.className = 'opponent-cards';
+        
+        // Adapter la classe selon le nombre de cartes
+        if (player.cards.length > 10) {
+            cardsEl.classList.add('lots-of-cards');
+        } else if (player.cards.length > 6) {
+            cardsEl.classList.add('many-cards');
+        }
 
         player.cards.forEach((cardData, cardIndex) => {
             // En mode en ligne, les cartes des autres sont toujours faces cachées
@@ -1103,6 +1110,14 @@ function updateActivePlayerDisplay() {
         ? `${myPlayer.name}${playerNameSuffix}` 
         : myPlayer.name;
     elements.activePlayerCards.innerHTML = '';
+    
+    // Adapter la classe selon le nombre de cartes
+    elements.activePlayerCards.classList.remove('many-cards', 'lots-of-cards');
+    if (myPlayer.cards.length > 10) {
+        elements.activePlayerCards.classList.add('lots-of-cards');
+    } else if (myPlayer.cards.length > 6) {
+        elements.activePlayerCards.classList.add('many-cards');
+    }
 
     myPlayer.cards.forEach((cardData, cardIndex) => {
         // En mode en ligne, je vois mes cartes face cachée sauf si je les ai regardées
