@@ -1033,10 +1033,17 @@ function updateOpponentsDisplay() {
         const cardsEl = document.createElement('div');
         cardsEl.className = 'opponent-cards';
         
-        // Adapter la classe selon le nombre de cartes
-        if (player.cards.length > 10) {
+        // Calculer le nombre de colonnes selon le nombre de cartes (forme quasi-carrée)
+        const numCards = player.cards.length;
+        const cols = Math.ceil(Math.sqrt(numCards));
+        cardsEl.style.gridTemplateColumns = `repeat(${cols}, auto)`;
+        
+        // Adapter la taille des cartes selon le nombre de colonnes
+        if (cols >= 5) {
+            cardsEl.classList.add('huge-cards');
+        } else if (cols >= 4) {
             cardsEl.classList.add('lots-of-cards');
-        } else if (player.cards.length > 6) {
+        } else if (cols >= 3) {
             cardsEl.classList.add('many-cards');
         }
 
@@ -1111,11 +1118,18 @@ function updateActivePlayerDisplay() {
         : myPlayer.name;
     elements.activePlayerCards.innerHTML = '';
     
-    // Adapter la classe selon le nombre de cartes
-    elements.activePlayerCards.classList.remove('many-cards', 'lots-of-cards');
-    if (myPlayer.cards.length > 10) {
+    // Calculer le nombre de colonnes selon le nombre de cartes (forme quasi-carrée)
+    const numCards = myPlayer.cards.length;
+    const cols = Math.ceil(Math.sqrt(numCards));
+    elements.activePlayerCards.style.gridTemplateColumns = `repeat(${cols}, auto)`;
+    
+    // Adapter la taille des cartes selon le nombre de colonnes
+    elements.activePlayerCards.classList.remove('many-cards', 'lots-of-cards', 'huge-cards');
+    if (cols >= 5) {
+        elements.activePlayerCards.classList.add('huge-cards');
+    } else if (cols >= 4) {
         elements.activePlayerCards.classList.add('lots-of-cards');
-    } else if (myPlayer.cards.length > 6) {
+    } else if (cols >= 3) {
         elements.activePlayerCards.classList.add('many-cards');
     }
 

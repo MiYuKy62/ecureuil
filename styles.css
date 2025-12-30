@@ -555,17 +555,25 @@ body {
     font-size: 0.7rem;
 }
 
-/* Adapter la taille des cartes adversaires si beaucoup */
+/* Adapter la taille des cartes adversaires si 3 colonnes */
 .opponent-cards.many-cards .card {
-    width: 32px;
-    height: 45px;
+    width: 32px !important;
+    height: 45px !important;
     font-size: 0.6rem;
 }
 
+/* Adapter la taille des cartes adversaires si 4 colonnes */
 .opponent-cards.lots-of-cards .card {
-    width: 26px;
-    height: 37px;
+    width: 26px !important;
+    height: 37px !important;
     font-size: 0.5rem;
+}
+
+/* Adapter la taille des cartes adversaires si 5+ colonnes */
+.opponent-cards.huge-cards .card {
+    width: 20px !important;
+    height: 28px !important;
+    font-size: 0.4rem;
 }
 
 /* Zone centrale */
@@ -777,24 +785,22 @@ body {
     height: 100px;
 }
 
-/* Adapter la taille des cartes si beaucoup de cartes (7-10) */
-.player-cards.many-cards {
-    grid-template-columns: repeat(2, auto);
-}
-
+/* Adapter la taille des cartes si 3 colonnes */
 .player-cards.many-cards .card {
-    width: 50px !important;
-    height: 72px !important;
+    width: 55px !important;
+    height: 78px !important;
 }
 
-/* Adapter la taille des cartes si énormément de cartes (11+) */
-.player-cards.lots-of-cards {
-    grid-template-columns: repeat(3, auto);
-}
-
+/* Adapter la taille des cartes si 4 colonnes */
 .player-cards.lots-of-cards .card {
-    width: 40px !important;
-    height: 57px !important;
+    width: 45px !important;
+    height: 64px !important;
+}
+
+/* Adapter la taille des cartes si 5+ colonnes */
+.player-cards.huge-cards .card {
+    width: 35px !important;
+    height: 50px !important;
 }
 
 .card.selectable {
