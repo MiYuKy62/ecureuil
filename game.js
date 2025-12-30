@@ -1171,8 +1171,9 @@ function updateActionButtons() {
     
     if (!isMyTurn) return; // Pas mon tour, pas de boutons
 
-    // Afficher le bouton "Je ferme" si la phase de jeu est active, pas déjà fermé, et pas en train de piocher
-    if (GameState.phase === 'playing' && !GameState.drawnCard && !GameState.lastRoundMode && !GameState.hasDiscardedThisTurn) {
+    // Afficher le bouton "Je ferme" APRÈS avoir fait l'action principale (pioché + défaussé/remplacé)
+    // Le joueur doit d'abord jouer son tour avant de pouvoir fermer
+    if (GameState.phase === 'playing' && !GameState.drawnCard && !GameState.lastRoundMode && GameState.hasDiscardedThisTurn) {
         elements.closeRound.classList.remove('hidden');
     }
     
