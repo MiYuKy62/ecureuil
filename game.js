@@ -728,6 +728,9 @@ function updateDisplay() {
     // Mettre à jour la phase
     updatePhaseDisplay();
 
+    // Mettre à jour le tableau des scores
+    updateScoreboard();
+
     // Mettre à jour la zone des adversaires
     updateOpponentsDisplay();
 
@@ -739,6 +742,58 @@ function updateDisplay() {
 
     // Mettre à jour les boutons d'action
     updateActionButtons();
+}
+
+// Mettre à jour le tableau des scores
+function updateScoreboard() {
+    const scoreboard = document.getElementById('scoreboard-content');
+    if (!scoreboard) return;
+    
+    // Créer un tableau des joueurs avec leurs scores pour le tri
+    const playersWithScores = GameState.players.map((player, index) => ({
+        player,
+        index,
+        score: GameState.totalScores[index] || 0,
+        eliminated: GameState.eliminated[index] || false,
+        cardCount: player.cards ? player.cards.length : 0
+    }));
+    
+    // Trier par score (le plus bas est le meilleur), les éliminés à la fin
+    playersWithScores.sort((a, b) => {
+        if (a.eliminated && !b.eliminated) return 1;
+        if (!a.eliminated && b.eliminated) return -1;
+        return a.score - b.score;
+    });
+    
+    // Générer le HTML
+    scoreboard.innerHTML = playersWithScores.map((data, displayRank) => {
+        const isCurrentTurn = data.index === GameState.currentPlayerIndex;
+        const isMe = GameState.isOnline && data.index === GameState.myPlayerIndex;
+        const rank = data.eliminated ? '💀' : displayRank + 1;
+        
+        let classes = 'score-row';
+        if (isCurrentTurn) classes += ' current-turn';
+        if (data.eliminated) classes += ' eliminated';
+        if (isMe) classes += ' is-me';
+        
+        let rankClass = 'score-rank';
+        if (!data.eliminated) {
+            if (displayRank === 0) rankClass += ' rank-1';
+            else if (displayRank === 1) rankClass += ' rank-2';
+            else if (displayRank === 2) rankClass += ' rank-3';
+        }
+        
+        return `
+            <div class="${classes}">
+                <div class="${rankClass}">${rank}</div>
+                <div class="score-player-info">
+                    <div class="score-player-name">${data.player.name}${isMe ? ' (vous)' : ''}</div>
+                    <div class="score-player-cards">${data.cardCount} carte${data.cardCount > 1 ? 's' : ''}</div>
+                </div>
+                <div class="score-value">${data.score} pts</div>
+            </div>
+        `;
+    }).join('');
 }
 
 // Mettre à jour l'affichage de la phase

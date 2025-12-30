@@ -1303,3 +1303,170 @@ body {
     z-index: 100;
     animation: fadeIn 0.3s ease;
 }
+
+/* ============================================
+   TABLEAU DES SCORES (SCOREBOARD)
+   ============================================ */
+
+#game-screen.active {
+    flex-direction: row;
+}
+
+.game-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.scoreboard-panel {
+    width: 220px;
+    min-width: 220px;
+    background: linear-gradient(180deg, rgba(45, 52, 54, 0.95) 0%, rgba(30, 35, 40, 0.98) 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.scoreboard-header {
+    padding: 1.5rem 1rem;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.scoreboard-header h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin: 0;
+}
+
+.scoreboard-content {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.score-row {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.score-row:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.score-row.current-turn {
+    border-color: var(--secondary-color);
+    background: rgba(0, 206, 201, 0.15);
+    box-shadow: 0 0 10px rgba(0, 206, 201, 0.2);
+}
+
+.score-row.eliminated {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+.score-row.is-me {
+    border-color: var(--primary-color);
+    background: rgba(108, 92, 231, 0.15);
+}
+
+.score-rank {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-right: 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+}
+
+.score-rank.rank-1 {
+    background: linear-gradient(135deg, #ffd700, #ffb700);
+    color: #333;
+}
+
+.score-rank.rank-2 {
+    background: linear-gradient(135deg, #c0c0c0, #a0a0a0);
+    color: #333;
+}
+
+.score-rank.rank-3 {
+    background: linear-gradient(135deg, #cd7f32, #b87333);
+    color: #fff;
+}
+
+.score-player-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.score-player-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-light);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.score-player-cards {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 2px;
+}
+
+.score-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    min-width: 35px;
+    text-align: right;
+}
+
+.score-row.eliminated .score-value {
+    color: var(--danger);
+}
+
+/* Responsive pour petits écrans */
+@media (max-width: 900px) {
+    #game-screen.active {
+        flex-direction: column;
+    }
+    
+    .scoreboard-panel {
+        width: 100%;
+        min-width: 100%;
+        max-height: 150px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .scoreboard-content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+    
+    .score-row {
+        flex: 1;
+        min-width: 120px;
+        margin-bottom: 0;
+        padding: 0.5rem 0.8rem;
+    }
+}

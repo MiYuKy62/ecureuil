@@ -111,13 +111,24 @@
 
         <!-- Écran de jeu -->
         <div id="game-screen" class="screen">
-            <div class="game-header">
-                <h2 id="current-player-display">Tour de : Joueur 1</h2>
-                <p id="game-phase">Phase : Regardez vos 2 cartes du bas</p>
-                <div id="online-indicator" class="online-indicator hidden">
-                    <span class="online-dot"></span> En ligne
+            <!-- Tableau des scores à gauche -->
+            <div id="scoreboard-panel" class="scoreboard-panel">
+                <div class="scoreboard-header">
+                    <h3>🏆 Scores</h3>
+                </div>
+                <div id="scoreboard-content" class="scoreboard-content">
+                    <!-- Généré dynamiquement -->
                 </div>
             </div>
+
+            <div class="game-main">
+                <div class="game-header">
+                    <h2 id="current-player-display">Tour de : Joueur 1</h2>
+                    <p id="game-phase">Phase : Regardez vos 2 cartes du bas</p>
+                    <div id="online-indicator" class="online-indicator hidden">
+                        <span class="online-dot"></span> En ligne
+                    </div>
+                </div>
 
             <div class="game-area">
                 <!-- Zone des adversaires (en haut) -->
@@ -158,14 +169,14 @@
                 </div>
             </div>
 
-            <!-- Actions du tour -->
-            <div class="game-actions">
-                <button id="end-look-phase" class="btn-primary hidden">J'ai mémorisé mes cartes</button>
-                <button id="close-round" class="btn-danger hidden">🔒 Je ferme !</button>
-                <button id="end-my-turn" class="btn-secondary hidden">⏭️ Terminer mon tour</button>
-                <button id="next-turn" class="btn-primary hidden">Tour suivant</button>
-            </div>
-        </div>
+                <!-- Actions du tour -->
+                <div class="game-actions">
+                    <button id="end-look-phase" class="btn-primary hidden">J'ai mémorisé mes cartes</button>
+                    <button id="close-round" class="btn-danger hidden">🔒 Je ferme !</button>
+                    <button id="end-my-turn" class="btn-secondary hidden">⏭️ Terminer mon tour</button>
+                    <button id="next-turn" class="btn-primary hidden">Tour suivant</button>
+                </div>
+            </div> <!-- Fin game-main -->
 
         <!-- Modal de notification (erreur/succès) -->
         <div id="notification-modal" class="modal hidden">
@@ -309,5 +320,6 @@
     <script src="game.js"></script>
 </body>
 </html>
- 
+
+ 
  
