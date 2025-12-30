@@ -794,7 +794,23 @@ body {
     gap: 1rem;
     padding: 1rem;
     flex-wrap: wrap;
-    position: relative;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+}
+
+/* Bouton J'ai mémorisé - Style spécial pour phase initiale */
+#end-look-phase {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(99, 110, 255, 0.7); }
+    50% { box-shadow: 0 0 20px 10px rgba(99, 110, 255, 0.3); }
 }
 
 /* Bouton Je ferme - Style spécial */
