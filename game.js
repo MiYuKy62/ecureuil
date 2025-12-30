@@ -15,7 +15,9 @@ const GameState = {
     turnsLeftAfterClose: 0, // Nombre de tours restants après fermeture
     isOnline: false, // Mode en ligne
     myPlayerIndex: -1, // Mon index dans la partie en ligne
-    hasDiscardedThisTurn: false // A défaussé sa carte piochée ce tour (temps de réflexion pour jeter une carte)
+    hasDiscardedThisTurn: false, // A défaussé sa carte piochée ce tour (temps de réflexion pour jeter une carte)
+    // Données de fin de manche (pour synchronisation)
+    roundEndData: null // { roundScores, closerBonus, closerWon, newlyEliminated }
 };
 
 // Exposer GameState globalement pour Network
@@ -404,12 +406,15 @@ function getSerializableGameState() {
         closerIndex: GameState.closerIndex,
         lastRoundMode: GameState.lastRoundMode,
         turnsLeftAfterClose: GameState.turnsLeftAfterClose,
-        hasDiscardedThisTurn: GameState.hasDiscardedThisTurn
+        hasDiscardedThisTurn: GameState.hasDiscardedThisTurn,
+        roundEndData: GameState.roundEndData
     };
 }
 
 // Recevoir l'état du jeu (clients)
 function receiveGameState(state) {
+    const previousPhase = GameState.phase;
+    
     GameState.players = state.players;
     GameState.currentPlayerIndex = state.currentPlayerIndex;
     GameState.deck = state.deck;
@@ -424,10 +429,17 @@ function receiveGameState(state) {
     GameState.lastRoundMode = state.lastRoundMode;
     GameState.turnsLeftAfterClose = state.turnsLeftAfterClose;
     GameState.hasDiscardedThisTurn = state.hasDiscardedThisTurn || false;
+    GameState.roundEndData = state.roundEndData || null;
     GameState.isOnline = true;
     
     // Trouver mon index
     GameState.myPlayerIndex = Network.getMyPlayerIndex();
+    
+    // Si on vient de passer en phase round_end et qu'on a les données, afficher le modal
+    if (GameState.phase === 'round_end' && GameState.roundEndData && previousPhase !== 'round_end') {
+        const { roundScores, closerBonus, closerWon, newlyEliminated } = GameState.roundEndData;
+        showRoundResults(roundScores, closerBonus, closerWon, newlyEliminated);
+    }
     
     updateDisplay();
 }
@@ -613,6 +625,7 @@ function startNewRoundOnline() {
     GameState.turnsLeftAfterClose = 0;
     GameState.drawnCard = null;
     GameState.hasDiscardedThisTurn = false;
+    GameState.roundEndData = null; // Réinitialiser les données de fin de manche
 
     GameState.players.forEach((player, index) => {
         if (GameState.eliminated[index]) return;
@@ -1764,6 +1777,7 @@ function startNewRound() {
     GameState.turnsLeftAfterClose = 0;
     GameState.hasDiscardedThisTurn = false;
     GameState.drawnCard = null;
+    GameState.roundEndData = null; // Réinitialiser les données de fin de manche
 
     GameState.players.forEach((player, index) => {
         if (GameState.eliminated[index]) return;
@@ -1892,6 +1906,14 @@ function endRound() {
             newlyEliminated.push(index);
         }
     });
+
+    // Stocker les données de fin de manche pour la synchronisation
+    GameState.roundEndData = { roundScores, closerBonus, closerWon, newlyEliminated };
+
+    // Broadcast en mode online AVANT d'afficher le modal
+    if (GameState.isOnline && Network.isHost) {
+        Network.broadcastGameState(getSerializableGameState());
+    }
 
     // Afficher les résultats
     showRoundResults(roundScores, closerBonus, closerWon, newlyEliminated);
