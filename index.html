@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Écureuil - Jeu de Cartes</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Écran d'accueil -->
+        <div id="menu-screen" class="screen active">
+            <div class="menu-container">
+                <h1 class="game-title">🐿️ Écureuil</h1>
+                <p class="subtitle">Le jeu de cartes mémoire</p>
+                
+                <button id="rules-btn" class="btn-rules">📖 Règles du jeu</button>
+                
+                <!-- Choix du mode -->
+                <div class="mode-selection">
+                    <button id="local-mode-btn" class="mode-btn active">
+                        <span class="mode-icon">🎮</span>
+                        <span class="mode-text">Local</span>
+                        <span class="mode-desc">Même écran</span>
+                    </button>
+                    <button id="online-mode-btn" class="mode-btn">
+                        <span class="mode-icon">🌐</span>
+                        <span class="mode-text">En ligne</span>
+                        <span class="mode-desc">Avec des amis</span>
+                    </button>
+                </div>
+
+                <!-- Mode Local -->
+                <div id="local-setup" class="setup-section">
+                    <div class="player-setup">
+                        <h3>Nombre de joueurs</h3>
+                        <div class="player-count-selector">
+                            <button class="count-btn" data-count="2">2</button>
+                            <button class="count-btn" data-count="3">3</button>
+                            <button class="count-btn active" data-count="4">4</button>
+                            <button class="count-btn" data-count="5">5</button>
+                            <button class="count-btn" data-count="6">6</button>
+                        </div>
+                        
+                        <div id="player-names" class="player-names">
+                            <!-- Les noms seront générés dynamiquement -->
+                        </div>
+                    </div>
+                    
+                    <button id="start-game" class="btn-primary">Commencer la partie</button>
+                </div>
+
+                <!-- Mode En ligne -->
+                <div id="online-setup" class="setup-section hidden">
+                    <div class="online-options">
+                        <div class="online-option">
+                            <h3>Créer une partie</h3>
+                            <input type="text" id="host-name" class="player-name-input" placeholder="Votre pseudo">
+                            <button id="create-game" class="btn-primary">Créer</button>
+                        </div>
+                        
+                        <div class="separator">OU</div>
+                        
+                        <div class="online-option">
+                            <h3>Rejoindre une partie</h3>
+                            <input type="text" id="join-name" class="player-name-input" placeholder="Votre pseudo">
+                            <input type="text" id="game-code" class="player-name-input" placeholder="Code de la partie">
+                            <button id="join-game" class="btn-primary">Rejoindre</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Écran du Lobby (en ligne) -->
+        <div id="lobby-screen" class="screen">
+            <div class="lobby-container">
+                <h2>🐿️ Salon de jeu</h2>
+                
+                <div class="game-code-display">
+                    <p>Code de la partie :</p>
+                    <div class="code-box">
+                        <span id="display-game-code">XXXX</span>
+                        <button id="copy-code" class="btn-icon" title="Copier">📋</button>
+                    </div>
+                    <p class="code-hint">Partagez ce code avec vos amis !</p>
+                </div>
+
+                <div class="lobby-players">
+                    <h3>Joueurs connectés (<span id="player-count">0</span>/6)</h3>
+                    <div id="lobby-player-list" class="player-list">
+                        <!-- Liste des joueurs -->
+                    </div>
+                </div>
+
+                <div id="host-controls" class="host-controls">
+                    <button id="start-online-game" class="btn-primary" disabled>
+                        Lancer la partie (min. 2 joueurs)
+                    </button>
+                </div>
+
+                <div id="waiting-message" class="waiting-message hidden">
+                    <p>⏳ En attente du lancement par l'hôte...</p>
+                </div>
+
+                <button id="leave-lobby" class="btn-secondary">Quitter</button>
+            </div>
+        </div>
+
+        <!-- Écran de jeu -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <h2 id="current-player-display">Tour de : Joueur 1</h2>
+                <p id="game-phase">Phase : Regardez vos 2 cartes du bas</p>
+                <div id="online-indicator" class="online-indicator hidden">
+                    <span class="online-dot"></span> En ligne
+                </div>
+            </div>
+
+            <div class="game-area">
+                <!-- Zone des adversaires (en haut) -->
+                <div id="opponents-area" class="opponents-area">
+                    <!-- Généré dynamiquement -->
+                </div>
+
+                <!-- Zone centrale : Pioche et Défausse -->
+                <div class="center-area">
+                    <div class="deck-container">
+                        <div id="draw-pile" class="card card-back deck-pile">
+                            <span class="deck-count" id="deck-count">48</span>
+                            <span class="deck-label">Pioche</span>
+                        </div>
+                        <div id="discard-pile" class="card discard-pile empty">
+                            <span class="deck-label">Défausse</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Carte piochée -->
+                    <div id="drawn-card-container" class="drawn-card-container hidden">
+                        <p>Carte piochée :</p>
+                        <div id="drawn-card" class="card"></div>
+                        <div class="drawn-card-actions">
+                            <button id="discard-drawn" class="btn-secondary">Défausser</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Zone du joueur actif (en bas) -->
+                <div id="active-player-area" class="active-player-area">
+                    <div class="player-info">
+                        <span id="active-player-name" class="player-name">Joueur 1</span>
+                    </div>
+                    <div id="active-player-cards" class="player-cards">
+                        <!-- 4 cartes générées dynamiquement -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions du tour -->
+            <div class="game-actions">
+                <button id="end-look-phase" class="btn-primary hidden">J'ai mémorisé mes cartes</button>
+                <button id="close-round" class="btn-danger hidden">🔒 Je ferme !</button>
+                <button id="end-my-turn" class="btn-secondary hidden">⏭️ Terminer mon tour</button>
+                <button id="next-turn" class="btn-primary hidden">Tour suivant</button>
+            </div>
+        </div>
+
+        <!-- Modal de notification (erreur/succès) -->
+        <div id="notification-modal" class="modal hidden">
+            <div class="modal-content notification-modal">
+                <div id="notification-icon" class="notification-icon">❌</div>
+                <h3 id="notification-title">Notification</h3>
+                <p id="notification-message"></p>
+                <button id="close-notification" class="btn-primary">OK</button>
+            </div>
+        </div>
+
+        <!-- Modal pour regarder une carte -->
+        <div id="peek-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3 id="peek-modal-title">Regardez votre carte</h3>
+                <div id="peek-card" class="card large"></div>
+                <button id="close-peek" class="btn-primary">J'ai mémorisé</button>
+            </div>
+        </div>
+
+        <!-- Modal de fin de manche -->
+        <div id="round-end-modal" class="modal hidden">
+            <div class="modal-content large">
+                <h2 id="round-end-title">Fin de la manche !</h2>
+                <p id="closer-result" class="closer-result"></p>
+                <div id="round-results"></div>
+                <div id="eliminated-players" class="eliminated-info hidden"></div>
+                <button id="next-round" class="btn-primary">Manche suivante</button>
+                <button id="game-over-btn" class="btn-primary hidden">Voir le classement final</button>
+            </div>
+        </div>
+
+        <!-- Modal de fin de partie -->
+        <div id="game-over-modal" class="modal hidden">
+            <div class="modal-content large">
+                <h2>🏆 Fin de la partie !</h2>
+                <div id="final-ranking"></div>
+                <button id="restart-game" class="btn-primary">Nouvelle partie</button>
+            </div>
+        </div>
+
+        <!-- Modal des règles -->
+        <div id="rules-modal" class="modal hidden">
+            <div class="modal-content rules-modal">
+                <button id="close-rules" class="close-modal-btn">×</button>
+                <h2>📖 Règles du jeu Écureuil</h2>
+                
+                <div class="rules-content">
+                    <section class="rule-section">
+                        <h3>🎯 But du jeu</h3>
+                        <p>Avoir le <strong>moins de points possible</strong> à la fin de chaque manche. Le premier joueur à atteindre <strong>100 points est éliminé</strong>. Le dernier joueur restant gagne !</p>
+                    </section>
+
+                    <section class="rule-section">
+                        <h3>🃏 Mise en place</h3>
+                        <ul>
+                            <li>Chaque joueur reçoit <strong>4 cartes face cachée</strong> (2 en haut, 2 en bas)</li>
+                            <li>Au début, vous pouvez regarder vos <strong>2 cartes du bas</strong> pour les mémoriser</li>
+                            <li>Un premier joueur est tiré au hasard</li>
+                        </ul>
+                    </section>
+
+                    <section class="rule-section">
+                        <h3>🔄 Déroulement d'un tour</h3>
+                        <p>À votre tour, vous avez <strong>3 options</strong> :</p>
+                        <ol>
+                            <li><strong>Piocher une carte</strong> du deck, puis :
+                                <ul>
+                                    <li>L'échanger avec une de vos cartes (l'ancienne va à la défausse)</li>
+                                    <li>Ou la défausser directement</li>
+                                </ul>
+                            </li>
+                            <li><strong>Prendre la carte de la défausse</strong> et l'échanger avec une de vos cartes</li>
+                            <li><strong>Tenter de jeter une de vos cartes</strong> si vous pensez qu'elle a la même valeur que celle sur la défausse :
+                                <ul>
+                                    <li>🟢 <strong>Bonne carte</strong> : elle est jetée, vous jouez avec une carte de moins !</li>
+                                    <li>🟠 <strong>Mauvaise carte</strong> : vous gardez votre carte + vous piochez une carte de pénalité</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <section class="rule-section">
+                        <h3>⚡ Cartes d'action</h3>
+                        <p>Quand vous <strong>défaussez</strong> une de ces cartes (sans l'échanger), vous déclenchez son pouvoir :</p>
+                        <div class="action-cards">
+                            <div class="action-card">
+                                <span class="card-symbol">10</span>
+                                <span class="card-action">Regarder une de <strong>VOS</strong> cartes</span>
+                            </div>
+                            <div class="action-card">
+                                <span class="card-symbol">J</span>
+                                <span class="card-action">Regarder une carte d'un <strong>ADVERSAIRE</strong></span>
+                            </div>
+                            <div class="action-card">
+                                <span class="card-symbol">Q</span>
+                                <span class="card-action"><strong>Échanger</strong> une de vos cartes avec celle d'un autre joueur (à l'aveugle)</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="rule-section">
+                        <h3>🔒 Fermer la manche ("Je ferme !")</h3>
+                        <ul>
+                            <li>Si vous pensez avoir le moins de points, cliquez sur <strong>"Je ferme !"</strong></li>
+                            <li>Tous les autres joueurs ont <strong>un dernier tour</strong> à jouer</li>
+                            <li>Ensuite, on révèle toutes les cartes et on compte les points</li>
+                            <li><strong>Bonus</strong> : si vous avez bien le moins de points → <strong>-4 points</strong></li>
+                            <li><strong>Pénalité</strong> : sinon → <strong>+10 points</strong></li>
+                        </ul>
+                    </section>
+
+                    <section class="rule-section">
+                        <h3>📊 Valeur des cartes</h3>
+                        <div class="points-table">
+                            <div class="points-row"><span>As (A)</span><span><strong>1 point</strong></span></div>
+                            <div class="points-row"><span>2 à 9</span><span><strong>Valeur faciale</strong></span></div>
+                            <div class="points-row"><span>10, Valet (J), Dame (Q)</span><span><strong>10 points</strong></span></div>
+                            <div class="points-row special black"><span>Roi Noir (♠ ♣)</span><span><strong>30 points</strong> 💀</span></div>
+                            <div class="points-row special red"><span>Roi Rouge (♥ ♦)</span><span><strong>-2 points</strong> ⭐</span></div>
+                        </div>
+                    </section>
+
+                    <section class="rule-section">
+                        <h3>🏆 Fin de partie</h3>
+                        <ul>
+                            <li>Dès qu'un joueur atteint <strong>100 points</strong>, il est <strong>éliminé</strong></li>
+                            <li>La partie continue jusqu'à ce qu'il ne reste qu'<strong>un seul joueur</strong></li>
+                            <li>Ce joueur est déclaré <strong>vainqueur</strong> !</li>
+                        </ul>
+                    </section>
+                </div>
+
+                <button id="close-rules-btn" class="btn-primary">J'ai compris !</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="cards.js"></script>
+    <script src="network.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
